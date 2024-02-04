@@ -1,15 +1,9 @@
 import { StarBorder, Star } from "@mui/icons-material";
+import { IMovie } from "../ts/interfaces/global_interface";
 
-type Movie = {
-    id: number;
-    title: string;
-    director: string;
-    runtime: number;
-    rating: number;
-}
 
 interface Props {
-    item: Movie;
+    item: IMovie;
     onRating: (id: number, rating: number) => void;
 }
 

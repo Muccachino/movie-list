@@ -1,14 +1,9 @@
+import { IMovie } from "../ts/interfaces/global_interface";
 import Rating from "./Rating";
 
-type Movie = {
-    id: number;
-    title: string;
-    director: string;
-    runtime: number;
-    rating: number;
-}
+
 interface Props {
-    movie: Movie;
+    movie: IMovie;
     onRating: (id: number, rating: number) => void;
 }
 interface Props {
