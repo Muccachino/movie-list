@@ -1,13 +1,16 @@
-import MovieList from "./components/MovieList.container"
+import MovieList from "./components/MovieList";
+import MoviesProvider from "./components/MoviesProvider";
+import "./App.css"
 
 function App() {
-
   return (
-    <div>
-      <h1>Move List</h1>
-      <MovieList />
-    </div>
-  )
+    <>
+      <h1 style={{ textAlign: "center" }}>Move List</h1>
+      <MoviesProvider>
+        <MovieList />
+      </MoviesProvider>
+    </>
+  );
 }
 
-export default App
+export default App;
