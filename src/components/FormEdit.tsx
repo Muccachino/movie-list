@@ -1,6 +1,9 @@
 import { IMovie, MovieInput} from "../ts/interfaces/global_interface";
 import {useForm} from "react-hook-form";
 import { useEffect } from "react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import style from "./css/FormEdit.module.css"
 
 interface Props {
     onSave: (movie: MovieInput) => void;
@@ -8,9 +11,20 @@ interface Props {
 }
 
 
+const movieSchema = yup.object({
+    title: yup
+    .string()
+    .required("Title is required")
+    .min(2, "The title must have min. 2 characters.")
+    .max(30, "The title must have max. 30 characters."),
+    director: yup.string().required("Director is required"),
+    runtime: yup.number().required("Runtime is required"),
+}).required();
+
+
 
 export default function FormEdit({onSave, editMovie}: Props): JSX.Element {
-    const {register, handleSubmit, reset, formState: {errors}} = useForm<MovieInput>();
+    const {register, handleSubmit, reset, formState: {errors}} = useForm<MovieInput>({resolver: yupResolver(movieSchema)});
  /*    useEffect(() => {
         if(editMovie) {
             setMovie(editMovie);
@@ -34,48 +48,35 @@ export default function FormEdit({onSave, editMovie}: Props): JSX.Element {
     }, [editMovie, reset])
 
     return (
-        <form className="input-movie-form" onSubmit={handleSubmit(onSave)}>
+        <form className={style.inputMovieForm} onSubmit={handleSubmit(onSave)}>
             <label htmlFor="title">
                 Title: 
-                <input type="text" placeholder="Movie title" {...register("title", {
-                    required: true, minLength: 2, maxLength:30
-                })}/>
+                <input
+                type="text"
+                placeholder="Movie title"
+                {...register("title")}
+                className={errors.title && style.error}/>
             </label>
-            {errors.title && (
-                <p>
-                    {errors.title.type === "required" && "Title is required"}
-                    {errors.title.type === "minLength" && "Title must have min. 2 letters"}
-                    {errors.title.type === "maxLength" && "Title must have max. 30 letters"}
-                </p>
-            )}
+            {errors.title && <div className={style.error}>{errors.title.message}</div>}
             <label htmlFor="director">
                 Director: 
-                <input type="text" placeholder="Movie director" {...register("director", {
-                    required: true, minLength: 5, maxLength:30
-                })}/>
+                <input
+                type="text"
+                placeholder="Movie director" 
+                {...register("director")}
+                className={errors.director && style.error}/>
             </label>
-            {errors.director && (
-                <p>
-                    {errors.director.type === "required" && "Director is required"}
-                    {errors.director.type === "minLength" && "Director must have min. 2 letters"}
-                    {errors.director.type === "maxLength" && "Director must have max. 30 letters"}
-                </p>
-            )}
+            {errors.director && <div className={style.error}>{errors.director.message}</div>}
             <label htmlFor="title">
                 Title: 
-                <input type="number" placeholder="0" {...register("runtime", {
-                    required: true, valueAsNumber: true, min: 0, max: 500
-                })}/>
+                <input
+                type="number"
+                placeholder="0"
+                {...register("runtime")}
+                className={errors.runtime && style.error}/>
             </label>
-            {errors.runtime && (
-                <p>
-                    {errors.runtime.type === "required" && "Runtime is required"}
-                    {errors.runtime.type === "valueAsNumber" && "Must be a number"}
-                    {errors.runtime.type === "min" && "Min. 0"}
-                    {errors.runtime.type === "max" && "Max. 500"}
-                </p>
-            )}
-            <button type="submit">Save</button>
+            {errors.runtime && <div className={style.error}>{errors.runtime.message}</div>}
+            <button type="submit" className={style.saveBtn}>Save</button>
         </form>
     )
 }
